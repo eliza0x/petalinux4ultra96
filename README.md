@@ -8,7 +8,7 @@
 ```
 $ docker build -t ultra96 .
 $ docker volume create peta2019.2
-$ docker run -it -v peta2019.2:/build --device=/dev/<SDCARD PARTITION>:/dev/sdcard  ultra96 /bin/bash
+$ docker run -it -v peta2019.2:/build ultra96 /bin/bash
 ```
 
 ## 3. Install Petalinux
@@ -75,7 +75,7 @@ $ petalinux-build
 ## 5. Package Linux
 
 ```
-$ petalinux-package --boot --fsbl ./images/linux/zynqmp_fsbl.elf --fpga ./images/linux/system.bit --pmufw ./images/linux/pmufw.elf --u-boot --force
+$ petalinux-package --boot --fsbl images/linux/zynqmp_fsbl.elf --u-boot images/linux/u-boot.elf --pmufw images/linux/pmufw.elf --fpga images/linux/system.bit --force
 ```
 
 ## 6. Write
@@ -84,11 +84,13 @@ $ petalinux-package --boot --fsbl ./images/linux/zynqmp_fsbl.elf --fpga ./images
 2. 
 
 ```
-$ docker cp 0aa21593402b:/build/ultra96v2_oob_2019_2/images/linux/rootfs.ext4 .                  
 $ docker cp 0aa21593402b:/build/ultra96v2_oob_2019_2/images/linux/BOOT.BIN .
 $ docker cp 0aa21593402b:/build/ultra96v2_oob_2019_2/images/linux/image.ub .
-$ sudo mount /dev/sdc1 /mnt
-$ sudo cp BOOT.BIN image.ub /mnt
-$ sudo dd if=rootfs.ext4 of=/dev/sdc2 bs=1M status=progress 
+$ docker cp 0aa21593402b:/build/ultra96v2_oob_2019_2/images/linux/system.dtb .
+$ docker cp 0aa21593402b:/build/ultra96v2_oob_2019_2/images/linux/rootfs.tar.gz .
+$ sudo mount /dev/sdc1 /mnt/BOOT
+$ sudo mount /dev/sdc2 /mnt/rootfs
+$ sudo cp BOOT.BIN image.ub /mnt/BOOT
+$ sudo tar xvf rootfs.tar.gz -C /mnt/rootfs
 ```
 
