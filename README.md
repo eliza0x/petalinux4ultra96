@@ -55,11 +55,14 @@ Filesystem Packages --->
       [ ] openamp-fw-rpc-demo
 ```
 
-### Able to generate ext4 rootfs
+### Edit device-tree
 
 ```
-$ petalinux-config
+$ vim project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi 
+```
 
+```
+$ vim project-spec/meta-user/recipes-bsp/device-tree/files/system-user.dtsi 
 ```
 
 ## 4. Build Ultra96 Linux Kernel
@@ -75,6 +78,7 @@ $ petalinux-build
 ## 5. Package Linux
 
 ```
+$ petalinux-config --get-hw-description=hardware/ULTRA96V2_2019_2
 $ petalinux-package --boot --fsbl images/linux/zynqmp_fsbl.elf --u-boot images/linux/u-boot.elf --pmufw images/linux/pmufw.elf --fpga images/linux/system.bit --force
 ```
 
